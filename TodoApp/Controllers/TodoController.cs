@@ -19,9 +19,11 @@ public class TodoController : ControllerBase
 
     [HttpPost]
     [Route("[Controller]/CreateNewTodo")]
-    public void CreateNewTodo(string title, string description)
+    public async Task<IActionResult> CreateNewTodo(string title, string description)
     {
-        var todoTask = _todoRepository.CreateNewTodo(title, description);
+        var todoTask = await _todoRepository.CreateNewTodo(title, description);
+
+        return todoTask == null ? Problem() : Created("TodoCreated", todoTask);
     }
 
     [HttpGet]

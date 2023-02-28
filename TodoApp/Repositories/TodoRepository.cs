@@ -12,9 +12,9 @@ public class TodoRepository : IToDoRepository
         _toDoDbContext = toDoDbContext;
     }
 
-    public TodoTask CreateNewTodo(string title, string description)
+    public async Task<TodoTask> CreateNewTodo(string title, string description)
     {
-        var task = _toDoDbContext.Tasks.Add(new()
+        var task = await _toDoDbContext.Tasks.AddAsync(new()
         {
             Title = title,
             Description = description
