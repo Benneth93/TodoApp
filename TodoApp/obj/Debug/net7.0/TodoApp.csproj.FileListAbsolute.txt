@@ -74,3 +74,4 @@ C:\Projects\TodoApp\TodoApp\obj\Debug\net7.0\refint\TodoApp.dll
 C:\Projects\TodoApp\TodoApp\obj\Debug\net7.0\TodoApp.pdb
 C:\Projects\TodoApp\TodoApp\obj\Debug\net7.0\TodoApp.genruntimeconfig.cache
 C:\Projects\TodoApp\TodoApp\obj\Debug\net7.0\ref\TodoApp.dll
+C:\Projects\TodoApp\TodoApp\bin\Debug\net7.0\Newtonsoft.Json.dll

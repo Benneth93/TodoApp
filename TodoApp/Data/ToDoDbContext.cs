@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace TodoApp.Data;
 
 
-public class Task
+public class TodoTask
 {
     [Key]
     public int TaskID { get; set; }
@@ -13,9 +14,9 @@ public class Task
 }
 public class ToDoDbContext : DbContext
 {
-    public DbSet<Task> Tasks { get; set; }
+    public DbSet<TodoTask> Tasks { get; set; }
 
-    public ToDoDbContext()
+    public ToDoDbContext(DbContextOptions<ToDoDbContext> options) : base(options)
     {
     }
 }

@@ -16,6 +16,7 @@ public static class SettingsRetrievalService
     public static void SettingsRetrievalServiceConfigure(IConfiguration config)
     {
         _configuration = config;
+        _connectionStrings = new();
         MapConnectionStirngs();
     }
 
