@@ -12,9 +12,9 @@ public class TodoRepository : IToDoRepository
         _toDoDbContext = toDoDbContext;
     }
 
-    public async Task<TodoTask> CreateNewTodo(string title, string description)
+    public TodoTask CreateNewTodo(string title, string description)
     {
-        var task = await _toDoDbContext.Tasks.AddAsync(new()
+        var task =  _toDoDbContext.Tasks.Add(new()
         {
             Title = title,
             Description = description
@@ -26,5 +26,34 @@ public class TodoRepository : IToDoRepository
     public IEnumerable<TodoTask> GetAllTasks()
     {
         return _toDoDbContext.Tasks.OrderBy(t => t.TaskID);
+    }
+
+    public TodoTask DeleteTodo(int id)
+    {
+        var task = _toDoDbContext.Tasks.FirstOrDefault(t => t.TaskID == id);
+
+        if (task != null)
+        {
+            _toDoDbContext.Tasks.Remove(task);
+            _toDoDbContext.SaveChanges();
+        }
+
+        return task;
+    }
+
+    public TodoTask UpdateTodo(int id, string title, string description)
+    {
+        var task = _toDoDbContext.Tasks.FirstOrDefault(t => t.TaskID == id);
+        
+        
+        if (task != null)
+        {
+            task.Description = description;
+            task.Title = title;
+
+            _toDoDbContext.SaveChanges();
+        }
+
+        return task;
     }
 }
