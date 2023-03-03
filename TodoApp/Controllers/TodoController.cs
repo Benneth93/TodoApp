@@ -1,16 +1,18 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using TodoApp.Data;
+using TodoApp.Dtos;
 using TodoApp.Interfaces;
 
 
 namespace TodoApp.Controllers;
 
 [Controller]
-[Route("[Controller]")]
 public class TodoController : ControllerBase
 {
     private ILogger<TodoController> _logger;
     private IToDoRepository _todoRepository;
+
     public TodoController(ILogger<TodoController> logger, IToDoRepository todoRepository)
     {
         _todoRepository = todoRepository;
@@ -19,18 +21,50 @@ public class TodoController : ControllerBase
 
     [HttpPost]
     [Route("[Controller]/CreateNewTodo")]
-    public async Task<IActionResult> CreateNewTodo(string title, string description)
+    
+    public async Task<IActionResult> CreateNewTodo([FromBody] NewTodoDto newTodo)
     {
-        var todoTask = await _todoRepository.CreateNewTodo(title, description);
+        var todoTask = await _todoRepository.CreateNewTodo(newTodo);
 
         return todoTask == null ? Problem() : Created("TodoCreated", todoTask);
     }
 
     [HttpGet]
-    public IEnumerable<TodoTask> GetTasks()
+    [Route("[Controller]/GetTasks")]
+    public async Task<IActionResult> GetTasks()
     {
         var tasks = _todoRepository.GetAllTasks();
-
-        return tasks;
+        
+        return tasks == null ? Problem() : Accepted("Success", tasks);
     }
+
+    [HttpPatch]
+    [Route("[Controller]/UpdateTodo")]
+    public async Task<IActionResult> UpdateTodo([FromBody] TodoTask updatedTask)
+    {
+        var updatedTodo = _todoRepository.UpdateTodo(updatedTask);
+
+        return updatedTodo == null ? Problem() : 
+            new JsonResult(new
+            {
+                message = "Todo updated", updatedTodo
+            });
+    }
+
+    [HttpDelete]
+    [Route("[Controller]/DeleteTodo")]
+    public async Task<IActionResult> DeleteTodo(int id)
+    {
+        var deletedTodo = _todoRepository.DeleteTodo(id);
+        
+        
+
+        return deletedTodo == null ? Problem() : 
+            new JsonResult(new
+            {
+                message = "Successfully deleted the following Todo", 
+                deletedTodo
+            });
+    }
+
 }

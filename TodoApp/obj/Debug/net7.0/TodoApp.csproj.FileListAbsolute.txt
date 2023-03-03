@@ -29,6 +29,7 @@ C:\Projects\TodoApp\TodoApp\bin\Debug\net7.0\Microsoft.OpenApi.dll
 C:\Projects\TodoApp\TodoApp\bin\Debug\net7.0\Microsoft.SqlServer.Server.dll
 C:\Projects\TodoApp\TodoApp\bin\Debug\net7.0\Microsoft.Win32.SystemEvents.dll
 C:\Projects\TodoApp\TodoApp\bin\Debug\net7.0\Mono.TextTemplating.dll
+C:\Projects\TodoApp\TodoApp\bin\Debug\net7.0\Newtonsoft.Json.dll
 C:\Projects\TodoApp\TodoApp\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Projects\TodoApp\TodoApp\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Projects\TodoApp\TodoApp\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -74,4 +75,3 @@ C:\Projects\TodoApp\TodoApp\obj\Debug\net7.0\refint\TodoApp.dll
 C:\Projects\TodoApp\TodoApp\obj\Debug\net7.0\TodoApp.pdb
 C:\Projects\TodoApp\TodoApp\obj\Debug\net7.0\TodoApp.genruntimeconfig.cache
 C:\Projects\TodoApp\TodoApp\obj\Debug\net7.0\ref\TodoApp.dll
-C:\Projects\TodoApp\TodoApp\bin\Debug\net7.0\Newtonsoft.Json.dll
