@@ -1,12 +1,13 @@
 using TodoApp.Data;
+using TodoApp.Dtos;
 
 namespace TodoApp.Interfaces;
 
 public interface IToDoRepository
 {
-    public TodoTask CreateNewTodo(string title, string description);
+    public Task<TodoTask> CreateNewTodo(NewTodoDto newTodoDto);
     public IEnumerable<TodoTask> GetAllTasks();
 
     public TodoTask DeleteTodo(int id);
-    public TodoTask UpdateTodo(int id, string title, string description);
+    public Task<TodoTask?> UpdateTodo(TodoTask updateTask);
 }

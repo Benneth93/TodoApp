@@ -24,7 +24,7 @@ public class TodoController : ControllerBase
     
     public async Task<IActionResult> CreateNewTodo([FromBody] NewTodoDto newTodo)
     {
-        var todoTask = _todoRepository.CreateNewTodo(newTodo.Title, newTodo.Description);
+        var todoTask = await _todoRepository.CreateNewTodo(newTodo);
 
         return todoTask == null ? Problem() : Created("TodoCreated", todoTask);
     }
@@ -42,7 +42,7 @@ public class TodoController : ControllerBase
     [Route("[Controller]/UpdateTodo")]
     public async Task<IActionResult> UpdateTodo([FromBody] TodoTask updatedTask)
     {
-        var updatedTodo = _todoRepository.UpdateTodo(updatedTask.TaskID, updatedTask.Title, updatedTask.Description);
+        var updatedTodo = _todoRepository.UpdateTodo(updatedTask);
 
         return updatedTodo == null ? Problem() : 
             new JsonResult(new
