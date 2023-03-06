@@ -20,17 +20,27 @@ public class TodoController : ControllerBase
     }
 
     [HttpPost]
-    [Route("[Controller]/CreateNewTodo")]
+    [Route("api/[Controller]/CreateNewTodo")]
     
     public async Task<IActionResult> CreateNewTodo([FromBody] NewTodoDto newTodo)
     {
         var todoTask = await _todoRepository.CreateNewTodo(newTodo);
+        if (todoTask == null)
+        {
+            _logger.LogError("todoTask failed to create");
+            return Problem("Todo failed to create");
+        }
+        else
+        {
+            return Created("TodoCreated", todoTask);
+        }
 
-        return todoTask == null ? Problem() : Created("TodoCreated", todoTask);
+         
+        
     }
 
     [HttpGet]
-    [Route("[Controller]/GetTasks")]
+    [Route("api/[Controller]/GetTasks")]
     public async Task<IActionResult> GetTasks()
     {
         var tasks = _todoRepository.GetAllTasks();
@@ -39,7 +49,7 @@ public class TodoController : ControllerBase
     }
 
     [HttpPatch]
-    [Route("[Controller]/UpdateTodo")]
+    [Route("api/[Controller]/UpdateTodo")]
     public async Task<IActionResult> UpdateTodo([FromBody] TodoTask updatedTask)
     {
         var updatedTodo = _todoRepository.UpdateTodo(updatedTask);
@@ -52,7 +62,7 @@ public class TodoController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("[Controller]/DeleteTodo")]
+    [Route("api/[Controller]/DeleteTodo")]
     public async Task<IActionResult> DeleteTodo(int id)
     {
         var deletedTodo = _todoRepository.DeleteTodo(id);
