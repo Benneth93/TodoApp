@@ -9,5 +9,5 @@ public interface IToDoRepository
     public IEnumerable<TodoTask> GetAllTasks();
 
     public TodoTask DeleteTodo(int id);
-    public Task<TodoTask?> UpdateTodo(TodoTask updateTask);
+    public Task<TodoTask?> UpdateTodo(TodoDto updateTask);
 }

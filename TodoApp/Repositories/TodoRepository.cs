@@ -22,6 +22,7 @@ public class TodoRepository : IToDoRepository
             Description = newTodoDto.Description
         });
         await _toDoDbContext.SaveChangesAsync();
+            
         return task.Entity;
     }
 
@@ -42,7 +43,7 @@ public class TodoRepository : IToDoRepository
         return task;
     }
 
-    public async Task<TodoTask?> UpdateTodo(TodoTask updateTask)
+    public async Task<TodoTask?> UpdateTodo(TodoDto updateTask)
     {
         var task = await _toDoDbContext.Tasks.FirstOrDefaultAsync(t => t.TaskID == updateTask.TaskID);
         

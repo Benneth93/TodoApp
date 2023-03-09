@@ -1,5 +1,7 @@
-using Microsoft.AspNetCore.Http.HttpResults;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
 using TodoApp.Data;
 using TodoApp.Dtos;
 using TodoApp.Interfaces;
@@ -24,19 +26,13 @@ public class TodoController : ControllerBase
     
     public async Task<IActionResult> CreateNewTodo([FromBody] NewTodoDto newTodo)
     {
-        var todoTask = await _todoRepository.CreateNewTodo(newTodo);
-        if (todoTask == null)
-        {
-            _logger.LogError("todoTask failed to create");
-            return Problem("Todo failed to create");
-        }
-        else
-        {
-            return Created("TodoCreated", todoTask);
-        }
-
-         
+        if (!ModelState.IsValid) return BadRequest(ModelState);
         
+        var todoTask = await _todoRepository.CreateNewTodo(newTodo);
+        if (todoTask != null) return Created("TodoCreated", todoTask);
+        
+        _logger.LogError("todoTask failed to create");
+        return Problem("Todo failed to create");
     }
 
     [HttpGet]
@@ -44,21 +40,26 @@ public class TodoController : ControllerBase
     public async Task<IActionResult> GetTasks()
     {
         var tasks = _todoRepository.GetAllTasks();
-        
         return tasks == null ? Problem() : Accepted("Success", tasks);
     }
 
     [HttpPatch]
     [Route("api/[Controller]/UpdateTodo")]
-    public async Task<IActionResult> UpdateTodo([FromBody] TodoTask updatedTask)
+    public async Task<IActionResult> UpdateTodo([FromBody] TodoDto updatedTask)
     {
-        var updatedTodo = _todoRepository.UpdateTodo(updatedTask);
+        if (ModelState.IsValid)
+        {
+            var updatedTodo = _todoRepository.UpdateTodo(updatedTask);
 
-        return updatedTodo == null ? Problem() : 
-            new JsonResult(new
-            {
-                message = "Todo updated", updatedTodo
-            });
+            return updatedTodo == null
+                ? Problem()
+                : new JsonResult(new
+                {
+                    message = "Todo updated", updatedTodo
+                });
+        }
+
+        return BadRequest(ModelState);
     }
 
     [HttpDelete]
@@ -67,8 +68,6 @@ public class TodoController : ControllerBase
     {
         var deletedTodo = _todoRepository.DeleteTodo(id);
         
-        
-
         return deletedTodo == null ? Problem() : 
             new JsonResult(new
             {
@@ -76,5 +75,4 @@ public class TodoController : ControllerBase
                 deletedTodo
             });
     }
-
 }
