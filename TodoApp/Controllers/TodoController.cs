@@ -49,7 +49,7 @@ public class TodoController : ControllerBase
     {
         if (ModelState.IsValid)
         {
-            var updatedTodo = _todoRepository.UpdateTodo(updatedTask);
+            var updatedTodo = await _todoRepository.UpdateTodo(updatedTask);
 
             return updatedTodo == null
                 ? Problem()
