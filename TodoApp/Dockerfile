@@ -1,20 +1,17 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-WORKDIR /src
-COPY ["TodoApp/TodoApp.csproj", "TodoApp/"]
-RUN dotnet restore "TodoApp/TodoApp.csproj"
+
 COPY . .
-WORKDIR "/src/TodoApp"
-RUN dotnet build "TodoApp.csproj" -c Release -o /app/build
+RUN dotnet publish TodoApp.csproj -c Release -o /app/publish
 
-FROM build AS publish
-RUN dotnet publish "TodoApp.csproj" -c Release -o /app/publish
-
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "TodoApp.dll"]
+COPY --from=build /app/publish .
+
+ENV ASPNETCORE_URLS=http://+:5192
+ENV ASPNETCORE_ENVIRONMENT=DevelopmentDocker
+EXPOSE 5192
+EXPOSE 1433
+
+CMD ["dotnet", "TodoApp.dll", "--urls", "http://0.0.0.0:5192"]
