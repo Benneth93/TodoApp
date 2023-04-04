@@ -1,10 +1,12 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+﻿#stage 1 build and restore
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
-
 
 COPY . .
 RUN dotnet publish TodoApp.csproj -c Release -o /app/publish
+RUN dotnet restore
 
+#stage 2 publish
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .

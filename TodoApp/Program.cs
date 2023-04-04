@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using TodoApp.Data;
 using TodoApp.Interfaces;
 using TodoApp.Repositlries;
@@ -15,7 +16,11 @@ builder.Services.AddDbContextPool<ToDoDbContext>(options =>
     options.UseSqlServer(connectionString);
 });
 builder.Services.AddScoped<IToDoRepository, TodoRepository>();
-// Add services to the container.
+
+var db = builder.Services.BuildServiceProvider().GetRequiredService<ToDoDbContext>();
+db.Database.Migrate();
+         
+         // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
