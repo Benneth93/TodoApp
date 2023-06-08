@@ -46,21 +46,21 @@ public class TodoController : ControllerBase
 
     [HttpPatch]
     [Route("api/[Controller]/UpdateTodo")]
+    //Todo: Add same validation that's used in create
+    //Todo: Add validation to throw 404 not found if the task does not exist
     public async Task<IActionResult> UpdateTodo([FromBody] TodoDto updatedTask)
     {
-        if (ModelState.IsValid)
-        {
-            var updatedTodo = await _todoRepository.UpdateTodo(updatedTask);
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        
+        var updatedTodo = await _todoRepository.UpdateTodo(updatedTask);
 
-            return updatedTodo == null
-                ? Problem()
-                : new JsonResult(new
-                {
-                    message = "Todo updated", updatedTodo
-                });
-        }
+        return updatedTodo == null
+            ? Problem()
+            : new JsonResult(new
+            {
+                message = "Todo updated", updatedTodo
+            });
 
-        return BadRequest(ModelState);
     }
     
     [HttpDelete]
