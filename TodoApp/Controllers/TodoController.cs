@@ -69,7 +69,7 @@ public class TodoController : ControllerBase
     public async Task<IActionResult> DeleteTodo(int id)
     {
         //Todo: Add error messaging if deleted todo is null, return A 404 not found error
-        var deletedTodo = _todoRepository.DeleteTodo(id);
+        var deletedTodo = await _todoRepository.DeleteTodo(id);
         
         return deletedTodo == null ? NotFound() : 
             new JsonResult(new

@@ -31,14 +31,14 @@ public class TodoRepository : IToDoRepository
         return _toDoDbContext.Tasks.OrderBy(t => t.TaskID);
     }
 
-    public TodoTask DeleteTodo(int id)
+    public async Task<TodoTask?> DeleteTodo(int id)
     {
         var task = _toDoDbContext.Tasks.FirstOrDefault(t => t.TaskID == id);
 
         if (task == null) return null;
         
         _toDoDbContext.Tasks.Remove(task);
-        _toDoDbContext.SaveChanges();
+        await _toDoDbContext.SaveChangesAsync();
 
         return task;
     }
@@ -52,7 +52,7 @@ public class TodoRepository : IToDoRepository
         task.Description = updateTask.Description;
         task.Title = updateTask.Title;
 
-        _toDoDbContext.SaveChanges();
+        await _toDoDbContext.SaveChangesAsync();
 
         return task;
     }

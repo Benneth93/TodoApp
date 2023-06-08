@@ -8,6 +8,6 @@ public interface IToDoRepository
     public Task<TodoTask> CreateNewTodo(NewTodoDto newTodoDto);
     public IEnumerable<TodoTask> GetAllTasks();
 
-    public TodoTask DeleteTodo(int id);
+    public Task<TodoTask?> DeleteTodo(int id);
     public Task<TodoTask?> UpdateTodo(TodoDto updateTask);
 }
