@@ -43,18 +43,17 @@ public class TodoRepository : IToDoRepository
         return task;
     }
 
+    //Todo: Add same validation that's used in create
+    //Todo: Add validation to throw 404 not found if the task does not exist
     public async Task<TodoTask?> UpdateTodo(TodoDto updateTask)
     {
         var task = await _toDoDbContext.Tasks.FirstOrDefaultAsync(t => t.TaskID == updateTask.TaskID);
         
-        
-        if (task != null)
-        {
-            task.Description = updateTask.Description;
-            task.Title = updateTask.Title;
+        if (task == null) return task;
+        task.Description = updateTask.Description;
+        task.Title = updateTask.Title;
 
-            _toDoDbContext.SaveChanges();
-        }
+        _toDoDbContext.SaveChanges();
 
         return task;
     }

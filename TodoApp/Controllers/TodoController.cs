@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using TodoApp.Data;
@@ -61,18 +62,42 @@ public class TodoController : ControllerBase
 
         return BadRequest(ModelState);
     }
-
+    
     [HttpDelete]
     [Route("api/[Controller]/DeleteTodo")]
+    [ValidateId]
     public async Task<IActionResult> DeleteTodo(int id)
     {
+        //Todo: Add error messaging if deleted todo is null, return A 404 not found error
         var deletedTodo = _todoRepository.DeleteTodo(id);
         
-        return deletedTodo == null ? Problem() : 
+        return deletedTodo == null ? NotFound() : 
             new JsonResult(new
             {
                 message = "Successfully deleted the following Todo", 
                 deletedTodo
             });
+    }
+
+    //Todo: Temporary home for this, needs work
+    [AttributeUsage(AttributeTargets.Method)]
+    private class ValidateIdAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (!context.ActionArguments.ContainsKey("id"))
+            {
+                context.Result = new BadRequestObjectResult("id paramater is missing");
+                return;
+            }
+
+            if (!int.TryParse(context.ActionArguments["id"].ToString(), out _))
+            {
+                context.Result = new BadRequestObjectResult("id paramater must be an integer");
+                return;
+            }
+            
+            base.OnActionExecuting(context);
+        }
     }
 }
