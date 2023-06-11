@@ -1,9 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.IdentityModel.Tokens;
-using TodoApp.Data;
 using TodoApp.Dtos;
 using TodoApp.Interfaces;
 
@@ -46,20 +43,22 @@ public class TodoController : ControllerBase
 
     [HttpPatch]
     [Route("api/[Controller]/UpdateTodo")]
-    //Todo: Add same validation that's used in create
-    //Todo: Add validation to throw 404 not found if the task does not exist
+ 
     public async Task<IActionResult> UpdateTodo([FromBody] TodoDto updatedTask)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         
         var updatedTodo = await _todoRepository.UpdateTodo(updatedTask);
-
-        return updatedTodo == null
-            ? Problem()
-            : new JsonResult(new
-            {
-                message = "Todo updated", updatedTodo
-            });
+        
+        //Todo: Getting a bit complex should consider making an error messaging service
+        
+        if (updatedTodo != null) return new JsonResult(new { message = "Todo updated", updatedTodo });
+        
+        var result = new JsonResult(new { message = "ID not found" })
+        {
+            StatusCode = (int)HttpStatusCode.NotFound
+        };
+        return result;
 
     }
     
@@ -68,15 +67,20 @@ public class TodoController : ControllerBase
     [ValidateId]
     public async Task<IActionResult> DeleteTodo(int id)
     {
-        //Todo: Add error messaging if deleted todo is null, return A 404 not found error
         var deletedTodo = await _todoRepository.DeleteTodo(id);
         
-        return deletedTodo == null ? NotFound() : 
-            new JsonResult(new
-            {
-                message = "Successfully deleted the following Todo", 
-                deletedTodo
-            });
+        //Todo: Getting a bit complex should consider making an error messaging service
+        if (deletedTodo != null) return new JsonResult(new
+        {
+            message = "Successfully deleted the following Todo", 
+            deletedTodo
+        });
+        
+        var result = new JsonResult(new { message = "ID not found" })
+        {
+            StatusCode = (int)HttpStatusCode.NotFound
+        };
+        return result;
     }
 
     //Todo: Temporary home for this, needs work
